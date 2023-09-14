@@ -9,3 +9,4 @@ You can use this login methods to see application:
 4. username: ss password: 4444
 
 
+link to the website: https://husan-bankist-app.netlify.app
