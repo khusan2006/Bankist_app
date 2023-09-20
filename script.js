@@ -131,6 +131,22 @@ const updateUI = function (acc) {
   calcDisplaySummary(acc);
 };
 
+const showNotification = function(text, background='red') {
+  Toastify({
+    text: text,
+    duration: 3000,
+    newWindow: true,
+    gravity: "top", 
+    position: "right", 
+    stopOnFocus: true, 
+    style: {
+      background: background,
+      width: 'text-content',
+      fontSize: '14px'
+    },
+  }).showToast();
+}
+
 ///////////////////////////////////////
 // Event handlers
 let currentAccount;
@@ -142,6 +158,8 @@ btnLogin.addEventListener('click', function (e) {
   currentAccount = accounts.find(
     acc => acc.username === inputLoginUsername.value
   );
+  // show notifictation if user doesn't exist 
+  if(!currentAccount) showNotification('There is no user with username')
 
   if (currentAccount?.pin === Number(inputLoginPin.value)) {
     // Display UI and message
@@ -156,6 +174,11 @@ btnLogin.addEventListener('click', function (e) {
 
     // Update UI
     updateUI(currentAccount);
+    // show notification to the user 
+    showNotification('logged in successfully', "linear-gradient(to right, #00b09b, #96c93d)")
+  }else{
+    //showing notification to the user 
+    showNotification('your password is incorrect')
   }
 });
 
@@ -179,6 +202,17 @@ btnTransfer.addEventListener('click', function (e) {
 
     // Update UI
     updateUI(currentAccount);
+    
+    showNotification('money is transfered successfully', '#ffb003')
+    // handling edge cases 
+  }else if(receiverAcc?.username === currentAccount.username) {
+    showNotification('you can not transfer money to yourself')
+  }else if(amount < 0) {
+    showNotification(`please enter valid amount`)
+  }else if(!receiverAcc) {
+    showNotification('There is no user with username')
+  }else if(currentAccount.balance <= amount) {
+    showNotification(`you don't have enough money to transfer`)
   }
 });
 
@@ -193,8 +227,13 @@ btnLoan.addEventListener('click', function (e) {
 
     // Update UI
     updateUI(currentAccount);
+  }else if(amount < 0) {
+    showNotification('please enter correct amount');
+  }else if(!currentAccount.movements.some(mov => mov >= amount * 0.1)) {
+    showNotification('you can not loan this amount')
   }
   inputLoanAmount.value = '';
+
 });
 
 btnClose.addEventListener('click', function (e) {
@@ -214,6 +253,13 @@ btnClose.addEventListener('click', function (e) {
 
     // Hide UI
     containerApp.style.opacity = 0;
+
+    // scroll the screen to the top
+    window.scrollTo(0, 0)
+    // show notification
+    showNotification('account is closed', 'red')
+  }else{
+    showNotification('your username or password is incorrect')
   }
 
   inputCloseUsername.value = inputClosePin.value = '';
@@ -225,3 +271,7 @@ btnSort.addEventListener('click', function (e) {
   displayMovements(currentAccount.movements, !sorted);
   sorted = !sorted;
 });
+
+
+
+
