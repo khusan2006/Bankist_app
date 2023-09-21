@@ -122,6 +122,18 @@ const showDate = function(date=new Date()) {
   return `${day}/${month}/${year}`
 }
 
+const calcDaysPassed = function(day1, day2) {
+  const MILISECOND = 1000;
+  const SECOND = 60;
+  const MINUTE = 60;
+  const DAY = 24
+  const difference = Number(day2) - Number(day1)
+  // convert it to day
+  const daysPassed = Math.trunc(Math.abs(difference / (MILISECOND * SECOND * MINUTE * DAY)));
+  if(daysPassed == 0) return 'Today';
+  if(daysPassed == 1) return 'yesterday';
+  if(daysPassed <= 7) return `${daysPassed} days ago`
+}
 
 
 const displayMovements = function ({movements, movementsDates}, sort = false) {
@@ -131,7 +143,8 @@ const displayMovements = function ({movements, movementsDates}, sort = false) {
 
   movs.forEach(function (mov, i) {
     const type = mov > 0 ? 'deposit' : 'withdrawal';
-    const date = showDate(new Date(movementsDates[i]))
+
+    const date = calcDaysPassed(new Date(movementsDates[i]), new Date()) || showDate(new Date(movementsDates[i]))
     const html = `
       <div class="movements__row">
         <div class="movements__type movements__type--${type}">${
