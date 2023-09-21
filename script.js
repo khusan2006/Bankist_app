@@ -61,8 +61,19 @@ const inputClosePin = document.querySelector('.form__input--pin');
 
 /////////////////////////////////////////////////
 // Functions
+const showDate = function() {
+  const date = new Date();
+  const year = date.getFullYear();
+  const month = String(date.getMonth() +1).padStart(2,0);
+  const day = String(date.getDate()).padStart(2,0);
+  
 
-const displayMovements = function (movements, sort = false) {
+  labelDate.textContent = `${day}/${month}/${year}`
+}
+
+showDate();
+
+const displayMovements = function ({movements}, sort = false) {
   containerMovements.innerHTML = '';
 
   const movs = sort ? movements.slice().sort((a, b) => a - b) : movements;
@@ -122,7 +133,7 @@ createUsernames(accounts);
 
 const updateUI = function (acc) {
   // Display movements
-  displayMovements(acc.movements);
+  displayMovements(acc);
 
   // Display balance
   calcDisplayBalance(acc);
@@ -266,9 +277,10 @@ btnClose.addEventListener('click', function (e) {
 });
 
 let sorted = false;
+
 btnSort.addEventListener('click', function (e) {
   e.preventDefault();
-  displayMovements(currentAccount.movements, !sorted);
+  displayMovements(currentAccount, !sorted);
   sorted = !sorted;
 });
 
