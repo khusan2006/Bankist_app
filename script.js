@@ -122,7 +122,7 @@ const showDate = function(date=new Date()) {
   return `${day}/${month}/${year}`
 }
 
-labelDate.textContent = showDate();
+
 
 const displayMovements = function ({movements, movementsDates}, sort = false) {
   containerMovements.innerHTML = '';
@@ -231,6 +231,9 @@ btnLogin.addEventListener('click', function (e) {
     }`;
     containerApp.style.opacity = 100;
 
+    //show date 
+    labelDate.textContent = showDate();
+
     // Clear input fields
     inputLoginUsername.value = inputLoginPin.value = '';
     inputLoginPin.blur();
@@ -262,7 +265,9 @@ btnTransfer.addEventListener('click', function (e) {
     // Doing the transfer
     currentAccount.movements.push(-amount);
     receiverAcc.movements.push(amount);
-
+    // add tranfer date
+    currentAccount.movementsDates.push(new Date())
+    receiverAcc.movementsDates.push(new Date())
     // Update UI
     updateUI(currentAccount);
     
@@ -287,7 +292,8 @@ btnLoan.addEventListener('click', function (e) {
   if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
     // Add movement
     currentAccount.movements.push(amount);
-
+    //add tranfer date
+    currentAccount.movementsDates.push(new Date())
     // Update UI
     updateUI(currentAccount);
   }else if(amount < 0) {
