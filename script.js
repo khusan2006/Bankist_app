@@ -112,7 +112,8 @@ const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
 const locale = navigator.language
-
+let currentAccount;
+let timer;
 /////////////////////////////////////////////////
 // Functions
 const showDate = function(date=new Date()) {
@@ -125,7 +126,24 @@ const showDate = function(date=new Date()) {
   }
   return new Intl.DateTimeFormat(locale, options).format(date)
 }
+const startLogoutTimer = function() {
+  let TIMEINSECONDS = 300;
 
+  const timeFinished = setInterval(() => {
+    const minute = String(Math.trunc(TIMEINSECONDS / 60)).padStart(2, 0)
+    const second = String(TIMEINSECONDS % 60).padStart(2,0)
+    labelTimer.textContent = `${minute}:${second}`
+    if(TIMEINSECONDS === 0) {
+      clearInterval(timeFinished)
+      labelWelcome.textContent = 'Log in to get started'
+      containerApp.style.opacity = 0;
+      window.scrollTo(0,0)
+    }
+    TIMEINSECONDS--
+
+  }, 1000)
+  return timeFinished
+}
 const calcDaysPassed = function(day1, day2) {
   const MILISECOND = 1000;
   const SECOND = 60;
@@ -229,7 +247,7 @@ const showNotification = function(text, background='red') {
 
 ///////////////////////////////////////
 // Event handlers
-let currentAccount;
+
 
 btnLogin.addEventListener('click', function (e) {
   // Prevent form from submitting
@@ -254,7 +272,9 @@ btnLogin.addEventListener('click', function (e) {
     // Clear input fields
     inputLoginUsername.value = inputLoginPin.value = '';
     inputLoginPin.blur();
-
+    console.log(timer)
+    if(timer) clearInterval(timer)
+    timer = startLogoutTimer()
     // Update UI
     updateUI(currentAccount);
     // show notification to the user 
@@ -285,6 +305,10 @@ btnTransfer.addEventListener('click', function (e) {
     // add tranfer date
     currentAccount.movementsDates.push(new Date().toISOString())
     receiverAcc.movementsDates.push(new Date().toISOString())
+
+    //restart timer function
+    clearInterval(timer)
+    timer = startLogoutTimer()
     // Update UI
     updateUI(currentAccount);
     
@@ -311,6 +335,9 @@ btnLoan.addEventListener('click', function (e) {
     currentAccount.movements.push(amount);
     //add tranfer date
     currentAccount.movementsDates.push(new Date().toISOString())
+    //restart timer function
+    clearInterval(timer)
+    timer = startLogoutTimer()
     // Update UI
     updateUI(currentAccount);
   }else if(amount < 0) {
