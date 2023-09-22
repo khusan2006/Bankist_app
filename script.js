@@ -111,15 +111,19 @@ const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
+const locale = navigator.language
+
 /////////////////////////////////////////////////
 // Functions
 const showDate = function(date=new Date()) {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() +1).padStart(2,0);
-  const day = String(date.getDate()).padStart(2,0);
-  
+ 
 
-  return `${day}/${month}/${year}`
+  const options = {
+    month: '2-digit',
+    day: '2-digit',
+    year: 'numeric'
+  }
+  return new Intl.DateTimeFormat(locale, options).format(date)
 }
 
 const calcDaysPassed = function(day1, day2) {
