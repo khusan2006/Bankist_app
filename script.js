@@ -137,7 +137,7 @@ const startLogoutTimer = function() {
       clearInterval(timeFinished)
       labelWelcome.textContent = 'Log in to get started'
       containerApp.style.opacity = 0;
-      window.scrollTo(0,0)
+      scrollToTop()
     }
     TIMEINSECONDS--
 
@@ -243,6 +243,14 @@ const showNotification = function(text, background='red') {
       fontSize: '14px'
     },
   }).showToast();
+}
+
+const scrollToTop = function() {
+  window.scrollTo({
+    left: 0,
+    top: 0,
+    behavior: 'smooth'
+  })
 }
 
 ///////////////////////////////////////
@@ -368,7 +376,7 @@ btnClose.addEventListener('click', function (e) {
     containerApp.style.opacity = 0;
 
     // scroll the screen to the top
-    window.scrollTo(0, 0)
+   scrollToTop()
     // show notification
     showNotification('account is closed', 'red')
   }else{
